@@ -1,8 +1,8 @@
 # Each route describes how an incoming URL is going to be processed by Platform.sh.
-"https://www.nick.ki/":
+"https://www.yinime.com/":
     type: upstream
     upstream: "app:http"
 
-"https://nick.ki/":
+"https://yinime.com/":
     type: redirect
-    to: "https://www.nick.ki/"
+    to: "https://www.yinime.com"
