@@ -1,6 +1,6 @@
 
       # The name of this app. Must be unique within a project.
-name: app
+name: ttu_management_sys
 
 # The runtime the application uses. The 'type' key defines the base container
 # image that will be used to run the application. There is a separate base
@@ -36,7 +36,8 @@ relationships:
 hooks:
     build: |
       pipenv install --system --deploy
+      pip install -r requirements.txt
 
 web:
   commands:
-    start: "python server.py"
+    start: "python app.py"
