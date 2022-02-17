@@ -1,0 +1,24 @@
+{% with messages = get_flashed_messages(with_categories=True,category_filter=['error','warning']) %}
+    {% if messages %}
+        {% for category,message in messages %}
+            <script type="text/javascript">
+                toastr.options.timeOut = 10000;
+                toastr.options.extendedTimeOut = 10000;
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.{{ category }}('{{ message }}', '{{ title }}');
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+{% with messages = get_flashed_messages(with_categories=True,category_filter=['success','info']) %}
+    {% if messages %}
+        {% for category,message in messages %}
+            <script type="text/javascript">
+                toastr.options.timeOut = 10000;
+                toastr.options.extendedTimeOut = 10000;
+                toastr.options.positionClass = 'toast-top-right';
+                toastr.{{ category }}('{{ message }}', '{{ title }}');
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}

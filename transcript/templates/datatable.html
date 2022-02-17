@@ -1,0 +1,161 @@
+{% macro DT(columns=columns,url='',show_create=True,can_add=True,can_delete=True) %}
+    <div class="table-responsive " >
+        <table id="zero_config" class="table table-bordered table-hover">
+            <thead class="text-uppercase" style="background-color: rgba(238,230,66,0.79)">
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(() => {
+            let can_add = {{ can_add|tojson }};
+            let can_delete = {{ can_delete|tojson }};
+
+            function buttons(json) {
+                return ` ${can_add ? `<button class="btn btn-sm btn-primary" onclick="updateItem('${json.id}')"><span class='lni lni-pencil'></span></button>` : ``}
+                        ${can_delete ? `<button class="btn btn-sm btn-danger" onclick="deleteItem('${json.id}')"><span class='lni lni-trash'></span></button>` : ``}
+                                `
+            }
+
+            function can_update_buttons(json) {
+                return `${can_delete ? `<button class="btn btn-sm btn-danger" onclick="deleteItem('${json.id}')"><span class='icon-delete'></span></button>` : ``}`
+            }
+
+            function can_delete_button(json) {
+                return `${can_delete ? `<button class="btn btn-sm btn-danger" onclick="deleteItem('${json.id}')"><span class='icon-delete'></span></button>` : ``}`
+            }
+
+            let table = $('#zero_config').DataTable({
+                dom: 'lrBftip',
+                processing: true,
+                paging: true,
+                ordering: false,
+                lengthMenu: [[5, 10, 25, 100, 500, 1000, 30000000], [5, 10, 25, 100, 500, 1000, "All"]],
+                serverSide: true,
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    checkboxes: {
+                        'selectRow': true
+                    },
+                    targets: 0
+                }],
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child'
+                },
+                order: [[1, 'asc']],
+                "ajax": {
+                    "url": "{{ url|safe }}",
+                    dataSrc: (json) => {
+                        for (let i = 0, len = json['data'].length; i < len; i++) {
+                            json['data'][i].x_id = json['data'][i].id
+                            json['data'][i]._ = ''
+                            if (json['data'][i].can_delete) {
+                                json['data'][i].id = can_delete_button(json['data'][i])
+                            } else if (json['data'][i].can_update) {
+                                json['data'][i].id = can_update_buttons(json['data'][i])
+                            } else if (json['data'][i].no_options) {
+                                json['data'][i].id = ""
+                            } else {
+                                json['data'][i].id = buttons(json['data'][i])
+                            }
+                        }
+                        return json.data
+                    },
+                    "contentType": "application/json; charset=utf-8",
+                    "type": "GET"
+                },
+                stateSave: true,
+                search: {
+                    "smart": true
+                },
+                columns: {{ columns|safe }},
+                responsive: true,
+                buttons: [
+                    'excel', 'pdf', 'csv', 'print',
+                    {
+                        text: 'Reload <span class="lni lni-download"></span>',
+                        action: function (e, dt, node, config) {
+                            $('#zero_config').DataTable().ajax.reload();
+                        }
+                    },
+                    {% if can_delete %}
+                        {
+                            text: 'Delete <span class="icon-delete_sweep"></span>',
+                            action: (e, dt, node, config) => {
+                                let ids = []
+                                localStorage.setItem('rs', 0)
+                                table.rows(".selected").every(function () {
+                                    ids.push(this.data().x_id)
+                                });
+                                if (ids.length <= 0) {
+                                    bootbox.alert("Not Items selected");
+                                } else {
+                                    bootbox.confirm({
+                                        title: "Major Delete",
+                                        message: "Warning this will delete multiple items that were selected.",
+                                        callback: (option) => {
+                                            if (option) {
+                                                let payload = {ids: ids}
+                                                axios.delete(`{{ url }}`, {params: {'ids': payload.ids.join(",")}}).then(({status, data}) => {
+                                                    $('#zero_config').DataTable().ajax.reload();
+                                                }).catch((e) => {
+                                                    $('#zero_config').DataTable().ajax.reload();
+                                                    bootbox.alert(e)
+                                                })
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        },
+                    {% endif %}
+                ]
+            });
+        });
+
+        function updateItem(id) {
+            window.location.href = `{{ url }}?update=${id}`;
+        }
+
+        function deleteItem(id) {
+            bootbox.confirm({
+                message: "Are your sure you want to delete this record ?",
+                buttons: {
+                    confirm: {
+                        label: '<span class="lni lni-save"></span> Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: '<span class="lni lni-trash"></span> No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        let payload = {ids: [id]}
+                        axios.delete(`{{ url }}`, {params: {'ids': payload.ids.join(",")}}).then(({status, data}) => {
+                            if (data) {
+                                toastr.success('Delete complete', 'Success', {timeOut: 5000});
+                                $('#zero_config').DataTable().ajax.reload();
+                            } else {
+                                toastr.success('Delete complete with no response', 'Success', {timeOut: 5000});
+                                $('#zero_config').DataTable().ajax.reload();
+                            }
+
+                        }).catch((error) => {
+                            toastr.success('An Error Occurred, Record not found', 'Info', {timeOut: 5000})
+                            $('#zero_config').DataTable().ajax.reload();
+                        })
+                    } else {
+                        $('#zero_config').DataTable().ajax.reload();
+                    }
+                }
+            });
+        }
+    </script>
+
+{% endmacro %}

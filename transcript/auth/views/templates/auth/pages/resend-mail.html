@@ -1,0 +1,21 @@
+{% extends 'auth/layout/html/auth_base.html' %}
+{% block body %}
+    <div>
+        <form action="{{ url_for('auth.resend_mail') }}" method="post">
+            {{ renderField(form.email_address,'envelope') }}
+            <div class="row">
+                <div class="col-12">
+                    {{ form.submit(class='btn btn-primary btn-block') }}
+                    {{ form.hidden_tag() }}
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="btn-group d-flex">
+            <a href="{{ url_for('auth.login') }}" class="btn btn-outline-info text-sm">Login</a>
+            <a href="{{ url_for('auth.resend_mail') }}" class="btn btn-outline-info text-sm">Resend Confirmation
+                Mail</a>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% macro renderField(form,icon) %}
+    {% if form %}
+        {% if form.errors %}
+            {{ form.label() }}
+            <div class="input-group mb-3">
+                {{ form(class='form-control is-invalid',placeholder=form.label.text) }}
+                <div class="invalid-feedback">
+                    {% for error in form.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            {{ form.label() }}
+            <div class="input-group mb-3">
+                {{ form(class='form-control',placeholder=form.label.text) }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro renderCheckBox(form,args) %}
+    {% if form %}
+        {% if form.errors %}
+            <div class="custom-control custom-checkbox">
+                {{ form(class='custom-control-input is-invalid') }}
+                {{ form.label(class='custom-control-label text-capitalize') }}
+                <div class="invalid-feedback">
+                    {% for error in form.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+        {% else %}
+            <div class="custom-control custom-checkbox">
+                {{ form(class='custom-control-input') }}
+                {{ form.label(class='custom-control-label text-capitalize') }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}

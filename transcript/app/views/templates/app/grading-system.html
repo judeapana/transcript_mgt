@@ -1,0 +1,213 @@
+{% extends 'app/index.html' %}
+{% block content %}
+    <main class="page-content">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">{{ title }}</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="javascript:"><i class="bx bx-home-alt"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Grading System</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="ms-auto">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary">Bulk Upload</button>
+                    <button type="button" class="btn btn-primary split-bg-primary dropdown-toggle dropdown-toggle-split"
+                            data-bs-toggle="dropdown"><span class="visually-hidden">Toggle Dropdown</span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
+                        <a class="dropdown-item" href="javascript:">Download File</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end breadcrumb-->
+
+        <div class="row">
+            <div class="col-xl-12 mx-auto">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="border p-4 rounded">
+                            <div class="card-title d-flex align-items-center">
+                                <h5 class="mb-0">Grading System</h5>
+                            </div>
+                            <hr>
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                                                aria-expanded="false" aria-controls="collapseOne">
+                                            Practical Test Scheme
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse show"
+                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample"
+                                         style="">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-4 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <form class="row g-3" action="{{ request.url }}?option=pts">
+                                                                {{ Rf(form.name_of_schema) }}
+                                                                {{ Rf(form.criteria) }}
+                                                                {{ Rf(form.total_marks) }}
+                                                                {{ Rf(form.percentage) }}
+                                                                {{ Rf(form.grade) }}
+                                                                <div class="col-12">
+                                                                    <div class="d-grid">
+                                                                        <button class="btn btn-primary">Add Scheme <span
+                                                                                class="lni lni-plug"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-lg-8 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                {{ DT(columns=columns,url=url_for('app.grading_system',option='pts')) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!--end row-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo">
+                                            Examination Scheme
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse"
+                                         aria-labelledby="headingTwo" data-bs-parent="#accordionExample"
+                                         style="">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-4 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <form class="row g-3" method="post"
+                                                                  action="{{ request.url }}?option=ext">
+                                                                {{ Rf(form.name_of_schema) }}
+                                                                {{ Rf(form.criteria) }}
+                                                                {{ Rf(form.total_marks) }}
+                                                                {{ Rf(form.percentage) }}
+                                                                {{ Rf(form.grade) }}
+                                                                <div class="col-12">
+                                                                    <div class="d-grid">
+                                                                        <button class="btn btn-primary">Add Scheme <span
+                                                                                class="lni lni-plug"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-lg-8 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                {{ DT(columns=columns,url=url_for('app.grading_system',option='ext')) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!--end row-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseThree" aria-expanded="false"
+                                                aria-controls="collapseThree">
+                                            Total/ Overall Scheme
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse"
+                                         aria-labelledby="headingThree" data-bs-parent="#accordionExample"
+                                         style="">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-12 col-lg-4 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <form class="row g-3" method="post"
+                                                                  action="{{ request.url }}?option=to">
+                                                                {{ Rf(form.name_of_schema) }}
+                                                                {{ Rf(form.from_score) }}
+                                                                {{ Rf(form.criteria) }}
+                                                                {{ Rf(form.to_score) }}
+                                                                {{ Rf(form.grade_point) }}
+                                                                {{ Rf(form.grade) }}
+                                                                <div class="col-12">
+                                                                    <div class="d-grid">
+                                                                        <button class="btn btn-primary">Add Scheme <span
+                                                                                class="lni lni-plug"></span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-lg-8 d-flex">
+                                                    <div class="card border shadow-none w-100">
+                                                        <div class="card-body">
+                                                            <div class="table-responsive">
+                                                                {{ DT(columns=columns,url=url_for('app.grading_system',option='to')) }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!--end row-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!--end page main-->
+
+
+    <!--start overlay-->
+    <div class="overlay nav-toggle-icon"></div>
+    <!--end overlay-->
+
+    <!--Start Back To Top Button-->
+    <a href="javaScript:" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
+    <!--End Back To Top Button-->
+    <script>
+        $(function () {
+            $('#accordionExample a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+            $("ul.nav-pills > li > a").on("show.bs.tab", function (e) {
+                window.localStorage['tab'] = $(e.target).attr("href").replace('#', '');
+            });
+            let href = window.localStorage.getItem('tab');
+            $(`#navigations a[href="#${href}"]`).tab('show');
+        });
+    </script>
+{% endblock %}
+

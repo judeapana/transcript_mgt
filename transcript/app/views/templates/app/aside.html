@@ -1,0 +1,96 @@
+<aside class="sidebar-wrapper" data-simplebar="true">
+    <div class="sidebar-header">
+        <div>
+            <img src="{{ url_for('static',filename='assets/images/logo.png') }}" class="img-fluid"
+                 alt="logo icon">
+        </div>
+        <div class="toggle-icon ms-auto"><i class="bi bi-list"></i>
+        </div>
+    </div>
+
+    <!--navigation-->
+    <ul class="metismenu" id="menu">
+        <li>
+            <a href="{{ url_for('app.dashboard') }}">
+                <div class="parent-icon"><i class="lni lni-dashboard"></i>
+                </div>
+                <div class="menu-title">Dashboard</div>
+            </a>
+        </li>
+        <li class="menu-label">Application</li>
+        <li>
+            <a href="{{ url_for('app.accounts') }}">
+                <div class="parent-icon"><i class="lni lni-users"></i>
+                </div>
+                <div class="menu-title">Accounts</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.semesters') }}">
+                <div class="parent-icon"><i class="lni lni-road"></i>
+                </div>
+                <div class="menu-title">Semesters</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.courses') }}">
+                <div class="parent-icon"><i class="lni lni-book"></i>
+                </div>
+                <div class="menu-title">Courses</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.departments') }}">
+                <div class="parent-icon"><i class="lni lni-archive"></i>
+                </div>
+                <div class="menu-title">Departments</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.grading_system') }}">
+                <div class="parent-icon"><i class="lni lni-graph"></i>
+                </div>
+                <div class="menu-title">Grading Scheme</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.students') }}">
+                <div class="parent-icon"><i class="lni lni-graduation"></i>
+                </div>
+                <div class="menu-title">Students</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.student_results') }}">
+                <div class="parent-icon"><i class="lni lni-service"></i>
+                </div>
+                <div class="menu-title">Students Results</div>
+            </a>
+        </li>
+        <li>
+            <a href="{{ url_for('app.reporting') }}">
+                <div class="parent-icon"><i class="lni lni-printer"></i>
+                </div>
+                <div class="menu-title">Transcripts</div>
+            </a>
+        </li>
+        {#                <li>#}
+        {#                    <a href="" class="has-arrow">#}
+        {#                        <div class="parent-icon"><i class="lni lni-cog"></i>#}
+        {#                        </div>#}
+        {#                        <div class="menu-title">Settings</div>#}
+        {#                    </a>#}
+        {#                    <ul>#}
+        {#                        <li><a href="widgets-static-widgets.html"><i class="bi bi-circle"></i>Semesters</a>#}
+        {#                        </li>#}
+        {#                        <li><a href="widgets-data-widgets.html"><i class="bi bi-circle"></i>Departments</a>#}
+        {#                        </li> <li><a href="widgets-data-widgets.html"><i class="bi bi-circle"></i>Programmes</a>#}
+        {#                        </li>#}
+        {#                    </ul>#}
+        {#                </li>#}
+
+
+    </ul>
+    <!--end navigation-->
+</aside>
+
