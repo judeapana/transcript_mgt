@@ -13,87 +13,161 @@
                     </ol>
                 </nav>
             </div>
-            <div class="ms-auto">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-primary  dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown">Export <span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end">
-                        <a class="dropdown-item" href="javascript:">Print All</a>
-                        <a class="dropdown-item" href="javascript:">Export(CSV)</a>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <!--end breadcrumb-->
-
         <div class="row">
             <div class="col-xl-12 mx-auto">
                 <div class="card">
-                    <div class="card-body">
-                        <div class="border p-4 rounded">
-                            <div class="card-title d-flex align-items-center">
-                                <h5 class="mb-0">Generate Transcript</h5>
-                            </div>
-                            <hr>
-                            <div class="row mb-3">
-                                <label for="inputEnterYourName" class="col-sm-3 col-form-label">Student Matric
-                                    No</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="inputEnterYourName"
-                                           placeholder="Enter Your Name">
+                    <form action="" method="get">
+                        <div class="card-body">
+                            <div class="border p-4 rounded">
+                                <div class="card-title d-flex align-items-center">
+                                    <h5 class="mb-0">Generate Transcript</h5>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <label for="inputEnterYourName" class="col-sm-3 col-form-label">Semester</label>
-                                <div class="col-sm-9">
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header" id="headingThree">
-                                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                                    data-bs-target="#collapseThree" aria-expanded="true"
-                                                    aria-controls="collapseThree">
-                                                Add Filter
-                                            </button>
-                                        </h2>
-                                        <div id="collapseThree" class="accordion-collapse collapse"
-                                             aria-labelledby="headingThree" data-bs-parent="#accordionExample"
-                                             style="">
-                                            <div class="accordion-body">
-                                                <div class="row">
-                                                    <div class="col-3">
-                                                        <label class="form-label">From Semester</label>
-                                                        <select class="form-select">
-                                                            <option>Fashion</option>
-                                                            <option>Electronics</option>
-                                                            <option>Furniture</option>
-                                                            <option>Sports</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="col-3">
-                                                        <label class="form-label">To Semester</label>
-                                                        <select class="form-select">
-                                                            <option>Fashion</option>
-                                                            <option>Electronics</option>
-                                                            <option>Furniture</option>
-                                                            <option>Sports</option>
-                                                        </select>
+                                <hr>
+                                <div class="row mb-3">
+                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Student Matric
+                                        No</label>
+                                    <div class="col-sm-9">
+                                        {{ Rf(form.student) }}
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputEnterYourName" class="col-sm-3 col-form-label">Semester</label>
+                                    <div class="col-sm-9">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="headingThree">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                        data-bs-target="#collapseThree" aria-expanded="true"
+                                                        aria-controls="collapseThree">
+                                                    Add Filter
+                                                </button>
+                                            </h2>
+                                            <div id="collapseThree" class="accordion-collapse "
+                                                 aria-labelledby="headingThree" data-bs-parent="#accordionExample"
+                                                 style="">
+                                                <div class="accordion-body">
+                                                    <div class="row">
+                                                        <div class="col-3">
+                                                            {{ Rf(form.from_semester) }}
+                                                        </div>
+                                                        <div class="col-3">
+                                                            {{ Rf(form.to_semester) }}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <label class="col-sm-3 col-form-label"></label>
-                                <div class="col-sm-9">
-                                    <button type="submit" class="btn btn-primary px-5">Generate</button>
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label"></label>
+                                    <div class="col-sm-9">
+                                        <button type="submit" class="btn btn-primary px-5">Generate</button>
+                                        {% if form.student.data %}
+                                            <button id="printer" type="button" class="btn btn-primary px-5">Print
+                                            </button>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
+            {% if results %}
+                <div>
+                    <div class="card" id="printarea">
+                        <div class="card-body shadow-none">
+                            <div class="col-md-12">
+                                <img width="200" src="{{ url_for('static',filename="assets/images/logo.png") }}" alt="">
+                                <h6 style="float: right; margin-top: 60px">SCHOOL OF GRADUATE STUDIES</h6>
+                                <div class="border-bottom border-3 pt-1"></div>
+                            </div>
+                            <div class="col-md-12 pt-5 pb-4">
+                                <h6 style="float:right">13 th May,2019</h6>
+                            </div>
+                            <div class="col-md-12">
+                                <h6 class="text-center">ACADEMIC TRANSCRIPT</h6>
+                                <div class="border-bottom border-3 p-1"></div>
+                            </div>
+                            <div class="col-md-12 col-xs-12 pt-1">
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 col-sm-6 col-6">
+                                        <p>Name: {{ form.student.data.full_name }} </p>
+                                        <p>Programme Of Study: {{ form.student.data.programme.name }} </p>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 col-sm-6 col-6">
+                                        <p>Student ID: {{ form.student.data.matric_no }}</p>
+                                        <p>Index Number: </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12">
+                                <div class="border-bottom border-3 p-1"></div>
+                            </div>
+                        </div>
+                        <div class="col-xl-12 mx-auto small">
+                            <table class="table table-borderless">
+                                <thead>
+                                <tr class="text-uppercase">
+                                    <td style="text-decoration: underline;font-weight: bold">Course Code</td>
+                                    <td style="text-decoration: underline;font-weight: bold">Professional Task</td>
+                                    <td style="text-decoration: underline;font-weight: bold">Credit Hours</td>
+                                    <td style="text-decoration: underline;font-weight: bold">Raw Score</td>
+                                    <td style="text-decoration: underline;font-weight: bold">Remark</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for i in  results %}
+                                    <tr>
+                                        <td>{{ i.code }}</td>
+                                        <td>{{ i.course.title }}</td>
+                                        <td>{{ i.credit_hours }}</td>
+                                        <td>{{ i.total }}</td>
+                                        <td>{{ i.grade }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+
+                            {#                    <table class="table table-bordered">#}
+                            {#                        <thead>#}
+                            {#                        <tr>#}
+                            {#                            <td>Option</td>#}
+                            {#                            <td>Course</td>#}
+                            {#                            <td>Mid Semester</td>#}
+                            {#                            <td>Practical Test 1</td>#}
+                            {#                            <td>Practical Test 2</td>#}
+                            {#                            <td>End of Semester Examination</td>#}
+                            {#                            <td>Total Continuous Assessment</td>#}
+                            {#                            <td>Total Score</td>#}
+                            {#                            <td>Grade</td>#}
+                            {#                        </tr>#}
+                            {#                        </thead>#}
+                            {#                        <tbody>#}
+                            {#                        {% for i in  results %}#}
+                            {#                            <tr>#}
+                            {#                                <td>{{ i.option }}</td>#}
+                            {#                                <td>{{ i.course.title }}</td>#}
+                            {#                                <td>{{ i.mid_sem }}</td>#}
+                            {#                                <td>{{ i.prac_test1 }}</td>#}
+                            {#                                <td>{{ i.prac_test2 }}</td>#}
+                            {#                                <td>{{ i.end_of_sem }}</td>#}
+                            {#                                <td>{{ i.total_continuous_assem }}</td>#}
+                            {#                                <td>{{ i.total }}</td>#}
+                            {#                                <td>{{ i.grade }}</td>#}
+                            {#                            </tr>#}
+                            {#                        {% endfor %}#}
+                            {#                        </tbody>#}
+                            {#                    </table>#}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </main>
     <!--end page main-->
@@ -106,5 +180,10 @@
     <!--Start Back To Top Button-->
     <a href="javaScript:" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
     <!--End Back To Top Button-->
+    <script>
+        $("#printer").click(() => {
+            $("#printarea").printArea()
+        })
+    </script>
 {% endblock %}
 

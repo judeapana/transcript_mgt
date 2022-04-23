@@ -12,8 +12,9 @@
                         <div class="col-12 col-xl-4 order-xl-2">
                             <div class="card-body p-4 p-sm-5">
                                 <h5 class="card-title">Sign In</h5>
-                                <p class="card-text mb-4">See your growth and get consulting support!</p>
-                                <form class="form-body">
+                                <p class="card-text mb-4">Login into your default account</p>
+                                <form class="form-body" method="post">
+                                    {{ form.hidden_tag() }}
 
                                     <div class="row g-3">
                                         <div class="col-12">
@@ -21,8 +22,7 @@
                                             <div class="ms-auto position-relative">
                                                 <div class="position-absolute top-50 translate-middle-y search-icon px-3">
                                                     <i class="bi bi-envelope-fill"></i></div>
-                                                <input type="email" class="form-control radius-30 ps-5"
-                                                       id="inputEmailAddress" placeholder="Email">
+                                                {{ form.username(class="form-control radius-30 ps-5",placeholder="Username name") }}
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -31,19 +31,17 @@
                                             <div class="ms-auto position-relative">
                                                 <div class="position-absolute top-50 translate-middle-y search-icon px-3">
                                                     <i class="bi bi-lock-fill"></i></div>
-                                                <input type="password" class="form-control radius-30 ps-5"
-                                                       id="inputChoosePassword" placeholder="Password">
+                                                {{ form.password(class="form-control radius-30 ps-5",placeholder="Password") }}
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="form-check form-switch">
-                                                <input class="form-check-input" type="checkbox"
-                                                       id="flexSwitchCheckChecked" checked="">
+                                                {{ form.remember_me(class="form-check-input") }}
                                                 <label class="form-check-label" for="flexSwitchCheckChecked">Remember
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <div class="col-6 text-end"><a href="authentication-forgot-password.html">Forgot
+                                        <div class="col-6 text-end"><a href="{{ url_for('auth.forgot_password') }}">Forgot
                                             Password ?</a>
                                         </div>
                                         <div class="col-12">
@@ -52,27 +50,7 @@
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="col-12">
-                                            <div class="login-separater text-center">
-                                                <span>OR SIGN IN WITH EMAIL</span>
-                                                <hr>
-                                            </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <div class="d-flex align-items-center gap-3 justify-content-center">
-                                                <button type="button" class="btn btn-white text-danger"><i
-                                                        class="bi bi-google me-0"></i></button>
-                                                <button type="button" class="btn btn-white text-primary"><i
-                                                        class="bi bi-linkedin me-0"></i></button>
-                                                <button type="button" class="btn btn-white text-info"><i
-                                                        class="bi bi-facebook me-0"></i></button>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 text-center">
-                                            <p class="mb-0">Don't have an account yet? <a
-                                                    href="authentication-signup-with-header-footer.html">Sign up
-                                                here</a></p>
-                                        </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -83,7 +61,4 @@
         </div>
     </main>
 {% endblock %}
-{#{{ renderField(form.password,'lock') }}#}
-{#{{ form.master(value=request.args.get('q')) }}#}
-{#{{ form.csrf_token() }}#}
 

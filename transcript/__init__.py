@@ -1,5 +1,6 @@
 import flask_excel
 from flask import Flask, render_template
+from flask import url_for as _url_for
 
 from transcript.app.models import db
 from transcript.auth.models import db
@@ -51,7 +52,10 @@ def create_app(config=LocalConfig):
 
     @app.context_processor
     def f():
-        return dict(dir=dir)
+        def url_for(*args, **kwargs):
+            return _url_for(*args, **kwargs, _external=True)
+
+        return dict(dir=dir, url_for=url_for)
 
     return app
 

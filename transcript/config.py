@@ -1,3 +1,8 @@
+import os
+
+from flask import current_app
+
+
 class LocalConfig:
     DEBUG = True
     ENV = 'development'
@@ -21,6 +26,8 @@ class LocalConfig:
     PAGINATE_RESOURCE_LINKS_ENABLED = True
     FLASK_ADMIN_SWATCH = 'cerulean'
     TOASTR_POSITION_CLASS = 'toast-bottom-right'
+    SETTING_PATH = os.path.join(os.getcwd(), 'setting.conf.json')
+    GOOGLE_FONT_KEY = "AIzaSyC08N9GP2kyNMeIxS_x1VZ_GfqX1weuWtg"
 
 
 class ServerConfig(LocalConfig):

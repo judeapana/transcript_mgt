@@ -1,3 +1,4 @@
+import json
 import os
 import secrets
 from functools import wraps
@@ -71,26 +72,15 @@ def roles_required(roles):
 
     return wrapper
 
-
-def page(endpoint):
-    def wrapper(func):
-        @wraps(func)
-        def decorated(*args, **kwargs):
-            if not current_user.super_user:
-                if current_user.user_pages.all():
-                    for i in current_user.user_pages.all():
-                        if i.page.endpoint == endpoint and not i.view == True:
-                            raise NotYourPageException()
-                        else:
-                            pass
-                else:
-                    raise NotYourPageException()
-            return func(*args, **kwargs)
-
-        return decorated
-
-    return wrapper
+def read_config_json(path):
+    with open(os.path.join(path,), 'r') as f:
+        return json.load(f)
 
 
-class NotYourPageException(Exception):
-    pass
+def write_config_json(path, data):
+    with open(os.path.join(path), '+w') as f:
+        f.write(data)
+    with open(os.path.join(path), 'r') as f:
+        return json.load(f)
+
+

@@ -1,6 +1,6 @@
-{% macro DT(columns=columns,url='',show_create=True,can_add=True,can_delete=True) %}
-    <div class="table-responsive " >
-        <table id="zero_config" class="table table-bordered table-hover">
+{% macro DT(columns=columns,url='',show_create=True,can_add=True,can_delete=True,id="zero_config",class="zero_config") %}
+    <div class="table-responsive">
+        <table id="{{ id }}" class="table table-bordered table-hover">
             <thead class="text-uppercase" style="background-color: rgba(238,230,66,0.79)">
             </thead>
             <tbody>
@@ -28,7 +28,7 @@
                 return `${can_delete ? `<button class="btn btn-sm btn-danger" onclick="deleteItem('${json.id}')"><span class='icon-delete'></span></button>` : ``}`
             }
 
-            let table = $('#zero_config').DataTable({
+            let table = $("{{ "#"+id if id else "."+class}}").DataTable({
                 dom: 'lrBftip',
                 processing: true,
                 paging: true,
@@ -79,7 +79,7 @@
                     {
                         text: 'Reload <span class="lni lni-download"></span>',
                         action: function (e, dt, node, config) {
-                            $('#zero_config').DataTable().ajax.reload();
+                            $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                         }
                     },
                     {% if can_delete %}
@@ -101,9 +101,9 @@
                                             if (option) {
                                                 let payload = {ids: ids}
                                                 axios.delete(`{{ url }}`, {params: {'ids': payload.ids.join(",")}}).then(({status, data}) => {
-                                                    $('#zero_config').DataTable().ajax.reload();
+                                                    $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                                                 }).catch((e) => {
-                                                    $('#zero_config').DataTable().ajax.reload();
+                                                    $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                                                     bootbox.alert(e)
                                                 })
                                             }
@@ -118,7 +118,9 @@
         });
 
         function updateItem(id) {
-            window.location.href = `{{ url }}?update=${id}`;
+            let new_url = new URL("{{ url|safe }}")
+            new_url.searchParams.append('update', id)
+            window.location.href = new_url;
         }
 
         function deleteItem(id) {
@@ -140,18 +142,18 @@
                         axios.delete(`{{ url }}`, {params: {'ids': payload.ids.join(",")}}).then(({status, data}) => {
                             if (data) {
                                 toastr.success('Delete complete', 'Success', {timeOut: 5000});
-                                $('#zero_config').DataTable().ajax.reload();
+                                $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                             } else {
                                 toastr.success('Delete complete with no response', 'Success', {timeOut: 5000});
-                                $('#zero_config').DataTable().ajax.reload();
+                                $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                             }
 
                         }).catch((error) => {
                             toastr.success('An Error Occurred, Record not found', 'Info', {timeOut: 5000})
-                            $('#zero_config').DataTable().ajax.reload();
+                            $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                         })
                     } else {
-                        $('#zero_config').DataTable().ajax.reload();
+                        $('{{ "#"+id if id else "."+class}}').DataTable().ajax.reload();
                     }
                 }
             });

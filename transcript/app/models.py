@@ -38,6 +38,10 @@ class Student(db.Model, ActiveRecord):
     programme_id = db.Column(db.Integer, db.ForeignKey('programme.id', ondelete='cascade'), nullable=False)
     student_results = db.relationship('StudentResult', backref=db.backref('student'), lazy='dynamic')
 
+    @hybrid_property
+    def full_name(self):
+        return f"{self.first_name} {self.last_name} {self.middle_name}"
+
 
 class Department(db.Model, ActiveRecord):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -66,8 +70,8 @@ class GradingSystem(db.Model, ActiveRecord):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name_of_schema = db.Column(db.String(100), nullable=False)
     option = db.Column(ChoiceType([('PT', 'Practical Test'), ('EX', 'Examination'), ('TT', 'Total')]),
-                       nullable=False)
-    total_marks = db.Column(db.Float(), nullable=False)
+                       nullable=True)
+    total_marks = db.Column(db.Float(), nullable=True)
     criteria = db.Column(
         ChoiceType([('<=', 'Less Than Or Equal To'), ('>=', 'Greater Than Or Equal To'), ('>', 'Greater Than'),
                     ('<', 'Less Than'), ('==', 'Equal To')]), nullable=True)
@@ -79,6 +83,8 @@ class GradingSystem(db.Model, ActiveRecord):
                                   ('CM', 'Competent With Merit')]))
 
     # grade = db.Column(db.String(100), nullable=False)
+    def __repr__(self):
+        return f'<{self.grade}>'
 
     @hybrid_property
     def strike_score(self):
@@ -91,9 +97,9 @@ class StudentResult(db.Model, ActiveRecord):
     option = db.Column(db.Enum('MAIN', 'RESIT', 'RETAKE', name='option'), default='MAIN', nullable=True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id', ondelete='cascade'), nullable=False, )
     mid_sem = db.Column(db.Float(), default=0, nullable=False, info={'label': 'Mid Sem 20%'})
-    prac_test1 = db.Column(db.Float(), default=0, nullable=False, info={'label': 'Practical Test 1 20%'})
-    prac_test2 = db.Column(db.Float(), default=0, nullable=False, info={'label': 'Practical Test 2 20%'})
-    end_of_sem = db.Column(db.Float(), default=0, nullable=False, info={'label': 'End Of Sem 40%'})
+    prac_test1 = db.Column(db.Float(), default=0, nullable=False, info={'label': 'Practical Test 1 (20%)'})
+    prac_test2 = db.Column(db.Float(), default=0, nullable=False, info={'label': 'Practical Test 2 (20%)'})
+    end_of_sem = db.Column(db.Float(), default=0, nullable=False, info={'label': 'End Of Sem (40%)'})
 
     @hybrid_property
     def total_continuous_assem(self):
@@ -110,8 +116,8 @@ class StudentResult(db.Model, ActiveRecord):
     @hybrid_property
     def grade(self):
         rmrks = [self.schema_grading('EX'), self.schema_grading('PT')]
-        if "N" in rmrks:
-            return {"NC": "Not Competent"}
+        if "NC" in rmrks:
+            return "NC"
         else:
             return self.schema_grading('TT')
 
@@ -122,32 +128,32 @@ class StudentResult(db.Model, ActiveRecord):
         if option == 'TT':
             for grade in gss:
                 if self.total <= grade.to_score:
-                    return grade
+                    return grade.grade.code
         elif option == 'EX' or option == 'PT':
             for gs in gss:
                 if gs.criteria == "<":
                     if self.total_continuous_assem < gs.strike_score and option == "PT":
-                        return gs.grade
+                        return gs.grade.code
                     if self.end_of_sem < gs.strike_score and option == "EX":
-                        return gs.grade
+                        return gs.grade.code
                 if gs.criteria == "<=":
                     if self.total_continuous_assem <= gs.strike_score and option == "PT":
-                        return gs.grade
+                        return gs.grade.code
                     if self.end_of_sem <= gs.strike_score and option == "EX":
-                        return gs.grade
+                        return gs.grade.code
                 if gs.criteria == ">":
                     if self.total_continuous_assem > gs.strike_score and option == "PT":
-                        return gs.grade
+                        return gs.grade.code
                     if self.end_of_sem > gs.strike_score and option == "EX":
-                        return gs.grade
+                        return gs.grade.code
                 if gs.criteria == ">=":
                     if self.total_continuous_assem >= gs.strike_score and option == "PT":
-                        return gs.grade
+                        return gs.grade.code
                     if self.end_of_sem >= gs.strike_score and option == "EX":
-                        return gs.grade
+                        return gs.grade.code
                 if gs.criteria == "==":
                     if self.total_continuous_assem == gs.strike_score and option == "PT":
-                        return gs.grade
+                        return gs.grade.code
                     if self.end_of_sem == gs.strike_score and option == "EX":
-                        return gs.grade
+                        return gs.grade.code
         return 'Not Found'

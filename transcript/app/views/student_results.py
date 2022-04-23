@@ -20,6 +20,9 @@ def student_results():
         {'title': 'Prac T1', 'data': 'prac_test1'},
         {'title': 'Prac T2', 'data': 'prac_test2'},
         {'title': 'End of Sem', 'data': 'end_of_sem'},
+        {'title': 'Total C.A', 'data': 'total_continuous_assem'},
+        {'title': 'Total', 'data': 'total'},
+        {'title': 'Remark', 'data': 'grade'},
         {'title': 'created At', 'data': 'created'},
     ]
     form = StudentResultForm()

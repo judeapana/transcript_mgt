@@ -21,7 +21,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"><a class="dropdown-item"
                                                                                            href="javascript:">Action</a>
-                        <a class="dropdown-item" href="javascript:">Download File</a>
+                        <a class="dropdown-item" href="javascript:" id="u">Download File</a>
                     </div>
                 </div>
             </div>
@@ -78,4 +78,64 @@
     <!--Start Back To Top Button-->
     <a href="javaScript:" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
     <!--End Back To Top Button-->
+    <script>
+        $(document).ready(function () {
+            let loading = false
+            $("#u").click(function () {
+                bootbox.dialog({
+                    message: `<input id="file" name="file" type="file">`,
+                    title: `<span>File Upload</span>`,
+                    buttons: {
+                        success: {
+                            label: "Submit",
+                            className: "btn-primary btn-md",
+                            callback: function () {
+                                loading = true
+                                let formData = new FormData();
+                                let file = document.querySelector('#file');
+                                formData.append("file", file.files[0]);
+                                if (file.files[0] === undefined) {
+                                    bootbox.alert({title: 'Error', message: "Select to upload a file"})
+                                } else {
+                                    axios.post("{{ url_for('app.cs_file') }}", formData, {headers: {'Content-Type': 'multipart/form-data'}}).then(({data, status}) => {
+                                        let a = ""
+                                        data.detail.map((e, i) => {
+                                            a += `<tr> <td>${++i}</td> <td>${e.error}</td> <td>${e.data}</td> `
+                                        })
+                                        bootbox.alert({
+                                            title: "Upload Status",
+                                            size: 'large',
+                                            message: `
+                                                <h5>Upload Report</h5>
+                                                <p>Total Records: ${data.records ? data.records : 0}</p>
+                                                <p>Total Errors: ${data.errors ? data.errors : 0}</p>
+                                                <p>Total Uploaded: ${data.total ? data.total : 0}</p>
+                                                <p>Total Skipped: ${data.skipped ? data.skipped : 0}</p>
+                                                <h5>Errors Found</h5>
+                                                <table class="table table-bordered">
+                                                    <thead><tr><th>Index</th><th>Error</th><th>Data</th></tr></thead>
+                                                    <tbody>
+                                                    ${a}
+                                                    </tbody>
+                                                </table>
+
+                                                `,
+                                            callback: function () {
+                                                {#window.location.reload()#}
+                                            }
+                                        })
+                                    }).catch((e) => {
+                                        console.log(e)
+                                        bootbox.alert({title: 'Error', message: e.response.data.message})
+                                    })
+                                }
+                                loading = false
+
+                            }
+                        }
+                    }
+                });
+            })
+        })
+    </script>
 {% endblock %}

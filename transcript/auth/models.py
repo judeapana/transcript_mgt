@@ -20,7 +20,7 @@ class User(db.Model, ActiveRecord, UserMixin):
     phone_number = db.Column(db.String(100), info={'label': 'Primary Phone Number'}, nullable=True)
     img = db.Column(db.String(100), default='default-avatar.png')
     last_logged_in = db.Column(db.DateTime)
-    role = db.Column(db.Enum('ADMIN', 'EXAMINATION OFFICER', 'SECRETARY'), nullable=False)
+    role = db.Column(db.Enum('ADMIN', 'EXAMINATION OFFICER', 'SECRETARY',name='role'), nullable=False)
 
     def create_token(self, expires=3600):
         jst = TimedJSONWebSignatureSerializer(secret_key=current_app.secret_key, expires_in=expires)

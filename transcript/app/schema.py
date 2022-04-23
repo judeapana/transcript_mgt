@@ -1,3 +1,5 @@
+from marshmallow import fields
+
 from transcript.app.models import GradingSystem, Course, Department, Student, Programme, Semester, StudentResult
 from transcript.ext import ma
 
@@ -32,6 +34,10 @@ class StudentResultSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
         include_relationships = True
+
+    total_continuous_assem = fields.Function(lambda x: x.total_continuous_assem)
+    total = fields.Function(lambda x: x.total)
+    grade = fields.Function(lambda x: x.grade)
 
 
 class DepartmentSchema(ma.SQLAlchemyAutoSchema):

@@ -1,0 +1,113 @@
+{% extends 'app/index.html' %}
+{% block content %}
+    <main class="page-content" id="app">
+        <!--breadcrumb-->
+        <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+            <div class="breadcrumb-title pe-3">Settings</div>
+            <div class="ps-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0 p-0">
+                        <li class="breadcrumb-item"><a href="javascript:"><i class="bx bx-home-alt"></i></a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Settings</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header py-3">
+                <h6 class="mb-0">{{ title }}</h6>
+            </div>
+            <div class="card-body">
+                <fieldset>
+                    <legend>Transcript Settings</legend>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="">Email Address</label>
+                            <input class="form-control" type="email" v-model="op.transcript.email"><br>
+                            <label for="">Website</label>
+                            <input class="form-control" type="url" v-model="op.transcript.website"><br>
+                            <label for="">Tel</label>
+                            <input class="form-control" type="tel" v-model="op.transcript.tel"><br>
+                            <label for="">Address</label>
+                            <textarea class="form-control" type="text" v-model="op.transcript.address"></textarea><br>
+                        </div>
+                        <div class="col-md-6">
+
+                            <label for="">Font</label>
+                            <select class="form-control" type="" v-model="op.transcript.font">
+                                <option v-for="(font,index) in fonts" :key="index" :value="font">[[font]]</option>
+                            </select><br>
+                            <label for="">Signatory</label>
+                            <input class="form-control" type="text" v-model="op.transcript.signatory"><br>
+                            <label for="">Background Color</label>
+                            <input class="form-control" type="color" v-model="op.transcript.background"><br>
+                            <button class="btn btn-primary" @click="submit">Settings</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div><!--end row-->
+        </div>
+
+    </main>
+    <!--end page main-->
+
+    <!--start overlay-->
+    <div class="overlay nav-toggle-icon"></div>
+    <!--end overlay-->
+
+    <!--Start Back To Top Button-->
+    <a href="javaScript:" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
+    <!--End Back To Top Button-->
+    <script>
+        new Vue({
+            el: "#app",
+            delimiters: ['[[', ']]'],
+            mounted() {
+
+                axios.get("https://www.googleapis.com/webfonts/v1/webfonts?key={{ config["GOOGLE_FONT_KEY"] }}").then(({data, status}) => {
+                    this.fonts = data.items.map((i) => {
+                        return i.family
+                    })
+                }).catch((e) => {
+                    bootbox.alert("An Error Occurred")
+                })
+                axios.get("{{ url_for('app.settings') }}", {params: {"params": true}}).then(({data, status}) => {
+                    this.op = data
+                }).catch((e) => {
+                    bootbox.alert("An Error Occurred")
+                })
+            },
+            methods: {
+                submit() {
+                    let data = this.op
+                    this.loading = true
+                    axios.put("{{ url_for("app.settings") }}", data).then(({data, status}) => {
+                        this.loading = false
+                        this.op = data
+                        bootbox.alert("Successful Commit Occurred")
+                    }).catch((e) => {
+                        this.loading = false
+                        bootbox.alert("Successful Commit Occurred")
+                    })
+                }
+            },
+            data: {
+                fonts: null,
+                loading: false,
+                op: {
+                    transcript: {
+                        email: "",
+                        website: "",
+                        tel: "",
+                        address: "",
+                        font: "",
+                        signatory: "",
+                        background: ""
+                    }
+                }
+            }
+        })
+    </script>
+{% endblock %}

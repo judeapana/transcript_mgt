@@ -63,3 +63,8 @@ def courses():
                        recordsFiltered=total_records, recordsTotal=data.count())
 
     return render_template('app/courses.html', title='Create Courses', **context)
+
+
+@app.route('/cs/file', methods=['POST'])
+def cs_file():
+    return ''

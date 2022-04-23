@@ -36,6 +36,7 @@
 {% endblock %}
 {% block scripts %}
     <!-- Bootstrap bundle JS -->
+
     <script src="{{ url_for('static',filename='assets/js/bootstrap.bundle.min.js') }}"></script>
     <!--plugins-->
     <script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
@@ -62,6 +63,8 @@
     <script src="{{ url_for('static',filename='assets/plugins/datatables/html5.min.js') }}"></script>
     <script src="{{ url_for('static',filename='assets/plugins/datatables/buttons.print.min.js') }}"></script>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/PrintArea/2.4.1/jquery.PrintArea.js"></script>
     {{ toastr.include_toastr_js() }}
     {#    {{ toastr.include_jquery() }}#}
     {{ toastr.include_toastr_css() }}
