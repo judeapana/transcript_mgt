@@ -1,6 +1,6 @@
 {% extends 'app/index.html' %}
 {% block content %}
-    <main class="page-content">
+    <main class="page-content" id="app">
         <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-2 row-cols-xxl-4">
             <div class="col">
                 <div class="card overflow-hidden radius-10">
@@ -8,7 +8,7 @@
                         <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                             <div class="w-50">
                                 <p>Total Students</p>
-                                <h4 class="">8,542</h4>
+                                <h4 class="">[[stats.students]]</h4>
                             </div>
                             <div class="w-50">
                                 <p class="mb-3 float-end text-success">+ 16% <i class="bi bi-arrow-up"></i></p>
@@ -24,7 +24,7 @@
                         <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                             <div class="w-50">
                                 <p>Total Administrators</p>
-                                <h4 class="">12.5M</h4>
+                                <h4 class="">[[stats.users]]</h4>
                             </div>
                             <div class="w-50">
                                 <p class="mb-3 float-end text-danger">- 3.4% <i class="bi bi-arrow-down"></i></p>
@@ -40,7 +40,7 @@
                         <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                             <div class="w-50">
                                 <p>Courses</p>
-                                <h4 class="">$64.5K</h4>
+                                <h4 class="">[[stats.courses]]</h4>
                             </div>
                             <div class="w-50">
                                 <p class="mb-3 float-end text-success">+ 24% <i class="bi bi-arrow-up"></i></p>
@@ -56,7 +56,7 @@
                         <div class="d-flex align-items-stretch justify-content-between overflow-hidden">
                             <div class="w-50">
                                 <p>Generated Transcripts</p>
-                                <h4 class="">25.8K</h4>
+                                <h4 class="">[[stats.transcripts]]</h4>
                             </div>
                             <div class="w-50">
                                 <p class="mb-3 float-end text-success">+ 8.2% <i class="bi bi-arrow-up"></i></p>
@@ -206,7 +206,21 @@
                 </div>
             </div>
         </div><!--end row-->
-
-
     </main>
+    <script>
+        new Vue({
+            el: "#app",
+            mounted: function () {
+                axios.get("{{ url_for('app.statistics') }}").then(({data}) => {
+                    this.stats = data
+                })
+            },
+            data: {
+                name: "Jude",
+                stats: {}
+            },
+            delimiters: ['[[', ']]']
+        })
+
+    </script>
 {% endblock %}

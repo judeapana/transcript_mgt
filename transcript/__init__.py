@@ -10,7 +10,7 @@ from transcript.ext import migrate, mail, ma, login_manager, rq, toastr, mainten
 from .admin import admin
 
 
-def create_app(config=ServerConfig):
+def create_app(config=ServerConfigg):
     app = Flask(__name__)
     app.config.from_object(config)
     db.init_app(app)

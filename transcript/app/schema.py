@@ -64,3 +64,10 @@ class GradingSystemSchema(ma.SQLAlchemyAutoSchema):
         include_fk = True
         load_instance = True
         include_relationships = True
+
+
+class StatisticsSchema(ma.Schema):
+    students = fields.Integer(required=True)
+    courses = fields.Integer(required=True)
+    users = fields.Integer(required=True)
+    transcripts = fields.Integer()
