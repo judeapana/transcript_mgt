@@ -51,7 +51,7 @@ def file_upload(form, resize=(150, 150), dir='docs', static='static'):
     filename = secure_filename(form.data.filename)
     ext = filename.split('.')[-1]
     uploader_name = f'{secrets.token_hex(20)}.{ext}'
-    path = os.path.join(current_app.root_path, static, f'protected/{dir}/{uploader_name}')
+    path = os.path.join(current_app.root_path, static, f'private/{dir}/{uploader_name}')
     ret = {'filename': uploader_name, 'upload': form.data, 'full_path': path}
     if ext in ['jpg', 'png', 'jpeg']:
         image = Image.open(form.data)

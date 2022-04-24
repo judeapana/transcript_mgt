@@ -1,66 +1,34 @@
 {% extends 'app/index.html' %}
 {% block  content %}
     <main class="page-content">
-
-        <!--breadcrumb-->
-        <div class="page-breadcrumb d-none d-sm-flex align-items-center">
-            <div class="breadcrumb-title pe-3 text-white">Pages</div>
-            <div class="ps-3">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb mb-0 p-0">
-                        <li class="breadcrumb-item"><a href="javascript:"><i class="bx bx-home-alt text-white"></i></a>
-                        </li>
-                        <li class="breadcrumb-item active text-white" aria-current="page">User Profile</li>
-                    </ol>
-                </nav>
-            </div>
-            <div class="ms-auto">
-                <div class="btn-group">
-                    <button type="button" class="btn btn-light">Settings</button>
-                    <button type="button" class="btn btn-light split-bg-light dropdown-toggle dropdown-toggle-split"
-                            data-bs-toggle="dropdown"><span class="visually-hidden">Toggle Dropdown</span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-end"><a class="dropdown-item"
-                                                                                           href="javascript:">Action</a>
-                        <a class="dropdown-item" href="javascript:">Another action</a>
-                        <a class="dropdown-item" href="javascript:">Something else here</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="javascript:">Separated link</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--end breadcrumb-->
-
-        <div class="profile-cover bg-dark"></div>
-
         <div class="row">
             <div class="col-12 col-lg-8">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <h5 class="mb-0">My Account</h5>
+                        <h5 class="mb-0">Account Profile</h5>
                         <hr>
                         <div class="card shadow-none border">
                             <div class="card-header">
                                 <h6 class="mb-0">USER INFORMATION</h6>
                             </div>
                             <div class="card-body">
-                                <form class="row g-3">
+                                <form enctype="multipart/form-data" class="row g-3" method="post"
+                                      action="{{ url_for('app.profile',option='acc') }}">
                                     <div class="col-6">
                                         <label class="form-label">Username</label>
-                                        <input type="text" class="form-control" value="@jhon">
+                                        {{ form.username(class="form-control") }}
+                                        {{ form.hidden_tag() }}
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">Email address</label>
-                                        <input type="text" class="form-control" value="xyz@example.com">
+                                        {{ form.email_address(class="form-control") }}
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">First Name</label>
-                                        <input type="text" class="form-control" value="jhon">
+                                        <label class="form-label">Profile Image</label>
+                                        {{ form.img(class="form-control") }}
                                     </div>
-                                    <div class="col-6">
-                                        <label class="form-label">Last Name</label>
-                                        <input type="text" class="form-control" value="">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -70,61 +38,48 @@
                                 <h6 class="mb-0">Change Password</h6>
                             </div>
                             <div class="card-body">
-                                <form class="row g-3">
+                                <form class="row g-3" method="post" action="{{ url_for('app.profile',option='pwd') }}">
                                     <div class="col-6">
                                         <label class="form-label">Old Password</label>
-                                        <input type="text" class="form-control" value="Deo">
+                                        {{ pwd_form.hidden_tag() }}
+                                        {{ pwd_form.old_password(class="form-control") }}
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">New Password</label>
-                                        <input type="text" class="form-control" value="Deo">
+                                        {{ pwd_form.new_password(class="form-control") }}
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label">Confirm Password</label>
+                                        {{ pwd_form.confirm_password(class="form-control") }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
                                     </div>
                                 </form>
                             </div>
-                        </div>
-                        <div class="card shadow-none border">
-                            <div class="card-header">
-                                <h6 class="mb-0">Change Email Address</h6>
-                            </div>
-                            <div class="card-body">
-                                <form class="row g-3">
-                                    <div class="col-6">
-                                        <label class="form-label">New Email Address</label>
-                                        <input type="text" class="form-control" value="Deo">
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="text-start">
-                            <button type="button" class="btn btn-primary px-4">Save Changes</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-4">
+            <div class="col-12 col-lg-3">
                 <div class="card shadow-sm border-0 overflow-hidden">
                     <div class="card-body">
                         <div class="profile-avatar text-center">
-                            <img src="assets/images/avatars/avatar-1.png" class="rounded-circle shadow" width="120"
+                            <img src="{{ url_for('app.protected',filename='users/'+current_user.img) }}"
+                                 class="rounded-circle shadow" width="120"
                                  height="120" alt="">
                         </div>
                         <div class="text-center mt-4">
-                            <h4 class="mb-1">Jhon Deo, 27</h4>
-                            <p class="mb-0 text-secondary">Sydney, Australia</p>
-                            <div class="mt-4"></div>
-                            <h6 class="mb-1">HR Manager - Codervent Technology</h6>
-                            <p class="mb-0 text-secondary">University of Information Technology</p>
+                            <h4 class="mb-1">{{ current_user.username }}</h4>
+                            <p class="mb-0 text-secondary">{{ current_user.role }}</p>
                         </div>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent border-top">
-                            Activity Logs
-                            <span class="badge bg-primary rounded-pill">95</span>
+                            Last Logged In
+                            <span class="badge bg-primary rounded-pill">{{ current_user.last_logged_in }}</span>
                         </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
-                            Log in Attempts
-                            <span class="badge bg-primary rounded-pill">75</span>
-                        </li>
+
                     </ul>
                 </div>
             </div>

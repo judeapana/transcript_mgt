@@ -1,10 +1,12 @@
+from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import HiddenField
-from wtforms.validators import InputRequired, ValidationError
+from flask_wtf.file import FileAllowed, FileField, FileRequired
+from wtforms import HiddenField, PasswordField
+from wtforms.validators import InputRequired, ValidationError, Optional, EqualTo
 from wtforms_alchemy import ModelForm, QuerySelectField
-from wtforms_components.validators import If
 
 from transcript.app.models import StudentResult, Course, Department, Student, Programme, Semester, GradingSystem
+from transcript.auth.models import User
 
 
 class SemesterForm(ModelForm, FlaskForm):
@@ -17,7 +19,7 @@ class ProgrammeForm(ModelForm, FlaskForm):
         model = Programme
 
     department = QuerySelectField('Department', validators=[InputRequired()], query_factory=lambda: Department.query,
-                                  get_label='name')
+                                  get_label='name_of_department')
 
 
 class StudentForm(ModelForm, FlaskForm):
@@ -68,6 +70,10 @@ class StudentResultForm(ModelForm, FlaskForm):
         if value.data > 40:
             raise ValidationError('value must not exceed 40')
 
+    def validate_course(self, value):
+        if not value.data.programme == self.student.data.programme:
+            raise ValidationError('Please student doesnt offer this course')
+
 
 class GradingSystemForm(ModelForm, FlaskForm):
     class Meta:
@@ -86,3 +92,26 @@ class TranscriptForm(FlaskForm):
     to_semester = QuerySelectField('To Semester',
                                    query_factory=lambda: Semester.query,
                                    get_label='name_of_semester')
+
+
+class UserAccForm(ModelForm, FlaskForm):
+    class Meta:
+        model = User
+        only = ['phone_number', 'img', 'username', 'email_address']
+
+    img = FileField('Profile Image', validators=[Optional(), FileAllowed(['png', 'jpg', 'jpeg'])])
+
+
+class UserAccChangePassword(FlaskForm):
+    old_password = PasswordField('Old Password', validators=[InputRequired()])
+    new_password = PasswordField('New Password', validators=[InputRequired()])
+    confirm_password = PasswordField('Confirm New Password', validators=[
+        EqualTo('new_password', 'New password doesnt match confirmed password')])
+
+    def validate_old_password(self, old_password):
+        if current_user.password != old_password.data:
+            raise ValidationError('Please you have entered a wrong old password / mismatch')
+
+
+class UploadForm(FlaskForm):
+    file = FileField('File', validators=[FileRequired(), FileAllowed(['csv'])])

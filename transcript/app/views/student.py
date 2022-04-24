@@ -1,8 +1,11 @@
+import secrets
+from collections import namedtuple
+
 from flask import render_template, request, redirect, url_for, flash, jsonify
 from sqlalchemy import or_
 
-from transcript.app.forms import StudentForm
-from transcript.app.models import Student
+from transcript.app.forms import StudentForm, UploadForm
+from transcript.app.models import Student, Programme
 from transcript.app.schema import StudentSchema
 from transcript.app.views import app
 from transcript.ext import db
@@ -64,3 +67,43 @@ def students():
                        recordsFiltered=total_records, recordsTotal=data.count())
 
     return render_template('app/students.html', title='Create Students', **context)
+
+
+@app.route('/students/upload', methods=['POST', 'GET'])
+def upload_students():
+    form = UploadForm()
+    if request.method == 'POST':
+        try:
+            errors = []
+            dataset = request.get_array(field_name='file')
+            prepare = namedtuple('student', [col.strip().replace(" ", "_").lower() for col in dataset[0]])
+            dataset.pop(0)  # remove header
+            skipped = 0
+            success = 0
+            for item in dataset:
+                try:
+                    schema = prepare._make(item)
+                    item = Student()
+                    item.matric_no = str(schema.matric_no)
+                    item.first_name = str(schema.first_name)
+                    item.last_name = str(schema.last_name)
+                    item.middle_name = str(schema.middle_name)
+                    item.gender = str(schema.gender)
+                    item.credit_hours = str(schema.credit_hours)
+                    programme = Programme.query.filter(Programme.name == str(schema.programme)).first()
+                    if not programme:
+                        skipped += 1
+                        continue
+
+                    item.programme = programme
+                    item.save()
+                    success += 1
+                except Exception as e:
+                    db.session.rollback()
+                    errors.append(dict(data=item, error=str(e)))
+            if errors:
+                return jsonify(key=secrets.token_hex(4), records=len(dataset), skipped=skipped, total=success,
+                               errors=len(errors), detail=errors)
+        except Exception as e:
+            return jsonify(message=e.__str__()), 400
+    return render_template('app/student-upload.html', form=form, title="Upload Students")

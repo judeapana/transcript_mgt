@@ -1,5 +1,9 @@
+import secrets
+from collections import namedtuple
+
 from flask import render_template, request, redirect, flash, jsonify, url_for
 
+from transcript.app.forms import UploadForm
 from transcript.app.views import app
 from transcript.auth.forms import CreateUserForm
 from transcript.auth.models import User
@@ -13,6 +17,9 @@ def accounts():
         {'title': '', 'data': '_'},
         {'title': 'Action', 'data': 'id'},
         {'title': 'Username', 'data': 'username'},
+        {'title': 'Email Address', 'data': 'email_address'},
+        {'title': 'Phone Number', 'data': 'phone_number'},
+        {'title': 'Role', 'data': 'role'},
         {'title': 'created At', 'data': 'created'},
     ]
     form = CreateUserForm()
@@ -58,3 +65,36 @@ def accounts():
                        recordsFiltered=total_records, recordsTotal=data.count())
 
     return render_template('app/accounts.html', title='Create Accounts', **context)
+
+
+@app.route('/account/upload', methods=['POST', 'GET'])
+def upload_account():
+    form = UploadForm()
+    if request.method == 'POST':
+        try:
+            errors = []
+            dataset = request.get_array(field_name='file')
+            prepare = namedtuple('accounts', [col.strip().replace(" ", "_").lower() for col in dataset[0]])
+            dataset.pop(0)  # remove header
+            skipped = 0
+            success = 0
+            for item in dataset:
+                try:
+                    schema = prepare._make(item)
+                    _user = User()
+                    _user.username = str(schema.username)
+                    _user.password = str(schema.password)
+                    _user.email_address = str(schema.email_address)
+                    _user.phone_number = str(schema.phone_number)
+                    _user.role = str(schema.role)
+                    _user.save()
+                    success += 1
+                except Exception as e:
+                    db.session.rollback()
+                    errors.append(dict(data=item, error=str(e)))
+            if errors:
+                return jsonify(key=secrets.token_hex(4), records=len(dataset), skipped=skipped, total=success,
+                               errors=len(errors), detail=errors)
+        except Exception as e:
+            return jsonify(message=e.__str__()), 400
+    return render_template('app/accounts-upload.html', form=form, title="Upload Accounts")

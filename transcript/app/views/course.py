@@ -1,8 +1,11 @@
+import secrets
+from collections import namedtuple
+
 from flask import render_template, jsonify, request, redirect, url_for, flash
 from sqlalchemy import or_
 
-from transcript.app.forms import CourseForm
-from transcript.app.models import Course
+from transcript.app.forms import CourseForm, UploadForm
+from transcript.app.models import Course, Programme, Semester
 from transcript.app.schema import CourseSchema
 from transcript.app.views import app
 from transcript.ext import db
@@ -65,6 +68,48 @@ def courses():
     return render_template('app/courses.html', title='Create Courses', **context)
 
 
-@app.route('/cs/file', methods=['POST'])
-def cs_file():
-    return ''
+@app.route('/course/upload', methods=['POST', 'GET'])
+def upload_course():
+    form = UploadForm()
+    if request.method == 'POST':
+        try:
+            errors = []
+            dataset = request.get_array(field_name='file')
+            prepare = namedtuple('course', [col.strip().replace(" ", "_").lower() for col in dataset[0]])
+            dataset.pop(0)  # remove header
+            skipped = 0
+            success = 0
+            for item in dataset:
+                try:
+                    schema = prepare._make(item)
+                    item = Course()
+                    item.title = str(schema.title).strip()
+                    item.abbr = str(schema.abbr).strip()
+                    item.code = str(schema.code).strip()
+                    item.course_type = str(schema.course_type)
+                    item.credit_hours = int(schema.credit_hours)
+                    programme = Programme.query.filter(Programme.name == str(schema.programme).strip()).first()
+                    if not programme:
+                        skipped += 1
+                        errors.append({'error': 'Programme doesnt exist check name', 'data': item})
+                        continue
+                    semester = Semester.query.filter(Semester.name_of_semester == str(schema.semester).strip()).first()
+
+                    if not semester:
+                        skipped += 1
+                        errors.append({'error': 'Semester doesnt exist check name of semester', 'data': item})
+                        continue
+
+                    item.programme = programme
+                    item.semester = semester
+                    item.save()
+                    success += 1
+                except Exception as e:
+                    db.session.rollback()
+                    errors.append(dict(data=item, error=str(e)))
+            if errors:
+                return jsonify(key=secrets.token_hex(4), records=len(dataset), skipped=skipped, total=success,
+                               errors=len(errors), detail=errors)
+        except Exception as e:
+            return jsonify(message=e.__str__()), 400
+    return render_template('app/course-upload.html', form=form, title="Upload Accounts")

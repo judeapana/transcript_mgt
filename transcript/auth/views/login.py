@@ -25,12 +25,9 @@ def login():
                     raise InvalidAuthentication('Incorrect Username or Password')
                 else:
                     if user.role:
-                        if user.role == 'ADMIN':
+                        if user.role == 'ADMIN' or user.role == 'EXAMINATION OFFICER' or user.role == 'SECRETARY':
                             login_user(user, remember=form.remember_me.data, duration=timedelta(hours=5))
-                            return redirect(url_for('admin.dashboard'))
-                        elif user.role == 'SECRETARY':
-                            login_user(user, remember=form.remember_me.data, duration=timedelta(hours=5))
-                            return redirect(url_for('secretary.dashboard'))
+                            return redirect(url_for('app.dashboard'))
                         else:
                             raise InvalidAuthentication('Login failed')
                     else:

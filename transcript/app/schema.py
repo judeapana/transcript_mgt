@@ -12,12 +12,22 @@ class SemesterSchema(ma.SQLAlchemyAutoSchema):
         include_relationships = True
 
 
+class DepartmentSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Department
+        include_fk = True
+        load_instance = True
+        include_relationships = True
+
+
 class ProgrammeSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Programme
         include_fk = True
         load_instance = True
         include_relationships = True
+
+    department = fields.Nested(DepartmentSchema)
 
 
 class StudentSchema(ma.SQLAlchemyAutoSchema):
@@ -38,14 +48,6 @@ class StudentResultSchema(ma.SQLAlchemyAutoSchema):
     total_continuous_assem = fields.Function(lambda x: x.total_continuous_assem)
     total = fields.Function(lambda x: x.total)
     grade = fields.Function(lambda x: x.grade)
-
-
-class DepartmentSchema(ma.SQLAlchemyAutoSchema):
-    class Meta:
-        model = Department
-        include_fk = True
-        load_instance = True
-        include_relationships = True
 
 
 class CourseSchema(ma.SQLAlchemyAutoSchema):
