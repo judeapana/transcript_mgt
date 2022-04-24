@@ -4,13 +4,13 @@ from flask import url_for as _url_for
 
 from transcript.app.models import db
 from transcript.auth.models import db
-from transcript.config import LocalConfig
+from transcript.config import LocalConfig,ServerConfig
 from transcript.ext import migrate, mail, ma, login_manager, rq, toastr, maintenance, menu, qrcode, alchemydumps, hz, \
     pagination, csrf
 from .admin import admin
 
 
-def create_app(config=LocalConfig):
+def create_app(config=ServerConfig):
     app = Flask(__name__)
     app.config.from_object(config)
     db.init_app(app)
