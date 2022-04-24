@@ -33,12 +33,12 @@ class LocalConfig:
 class ServerConfig(LocalConfig):
     SQLALCHEMY_POOL_RECYCLE = 299
     SQLALCHEMY_POOL_TIMEOUT = 20
-    MAIL_SERVER = ''
-    MAIL_USERNAME = ''
+    MAIL_SERVER = 'localhost'
+    MAIL_USERNAME = 'transcript@ngsapp.com'
     MAIL_PASSWORD = ''
-    MAIL_PORT = 465
+    MAIL_PORT = 25
     MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
+    MAIL_USE_SSL = False
     MAIL_DEFAULT_SENDER = ''
     SQLALCHEMY_DATABASE_URI = 'postgresql://ngs:Ngsappdb123$@localhost/ttu_tran_mgt'
     ENV = 'production'
