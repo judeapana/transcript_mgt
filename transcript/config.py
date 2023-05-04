@@ -13,9 +13,9 @@ class LocalConfig:
     MAIL_PORT = 465
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
-    MAIL_USERNAME = 'niftytester@gmail.com'
+    MAIL_USERNAME = '--'
     MAIL_PASSWORD = '----'
-    MAIL_DEFAULT_SENDER = 'niftytester@gmail.com'
+    MAIL_DEFAULT_SENDER = '----'
     MAIL_ASCII_ATTACHMENTS = True
     FLASK_APP = 'app.py'
     RQ_REDIS_URL = 'redis://localhost:6379/1'
@@ -27,7 +27,7 @@ class LocalConfig:
     FLASK_ADMIN_SWATCH = 'cerulean'
     TOASTR_POSITION_CLASS = 'toast-bottom-right'
     SETTING_PATH = os.path.join(os.getcwd(), 'setting.conf.json')
-    GOOGLE_FONT_KEY = "AIzaSyC08N9GP2kyNMeIxS_x1VZ_GfqX1weuWtg"
+    GOOGLE_FONT_KEY = "-----"
 
 
 class ServerConfig(LocalConfig):
