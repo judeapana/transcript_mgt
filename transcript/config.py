@@ -14,7 +14,7 @@ class LocalConfig:
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'niftytester@gmail.com'
-    MAIL_PASSWORD = 'apana1jude1$$'
+    MAIL_PASSWORD = '----'
     MAIL_DEFAULT_SENDER = 'niftytester@gmail.com'
     MAIL_ASCII_ATTACHMENTS = True
     FLASK_APP = 'app.py'
